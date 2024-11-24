@@ -1,6 +1,5 @@
 import streamlit as st
 import cv2
-import numpy as np
 import os
 from joblib import load
 from demo import correct_feedback
@@ -49,12 +48,13 @@ st.sidebar.info("""
 4. Receive feedback and suggestions on improving your pose.
 """)
 
-# Upload Section
-st.header("Step 1: Upload Your Video")
-uploaded_file = st.file_uploader("Choose a video file", type=["mp4", "avi", "mov"])
+# Initialize session state for processed video
+if "output_video_path" not in st.session_state:
+    st.session_state["output_video_path"] = None
 
-# Initialize variables to manage processing
-output_video_path = None
+# Upload Section
+st.header("Upload Your Video")
+uploaded_file = st.file_uploader("Choose a video file", type=["mp4", "avi", "mov"])
 
 if uploaded_file is not None:
     # Show video preview
@@ -66,36 +66,37 @@ if uploaded_file is not None:
     with open(temp_video_path, "wb") as f:
         f.write(uploaded_file.getbuffer())
 
-    # Progress bar for processing
-    progress_bar = st.progress(0)
-    st.text("Generating feedback...")
+    # Check if feedback has already been generated
+    if st.session_state["output_video_path"] is None:
+        # Progress bar for processing
+        progress_bar = st.progress(0)
+        st.text("Generating feedback...")
 
-    # Generate feedback only once
-    with st.spinner("Processing feedback..."):
-        input_csv = r"C:\Users\prath\Desktop\YOGA PROJECT\teacher_yoga\angle_teacher_yoga.csv"
-        output_video_path = "processed_video" + os.path.splitext(uploaded_file.name)[1]
-        correct_feedback(model, video=temp_video_path, input_csv=input_csv, output_video=output_video_path)
+        # Generate feedback only once
+        with st.spinner("Processing feedback..."):
+            input_csv = r"C:\Users\prath\Desktop\YOGA PROJECT\teacher_yoga\angle_teacher_yoga.csv"
+            output_video_path = "processed_video" + os.path.splitext(uploaded_file.name)[1]
+            correct_feedback(model, video=temp_video_path, input_csv=input_csv, output_video=output_video_path)
 
-    # Completion message after feedback generation
-    st.success("Your video has been processed successfully! Feedback has been generated.")
-    st.markdown("### Your Yoga Pose Feedback")
+            # Save the output path in session state
+            st.session_state["output_video_path"] = output_video_path
 
-    # Optionally, you can show feedback details here (optional)
-    st.write("""
-    - **Pose Name:** *[Insert Pose Name Here]*
-    - **Pose Accuracy:** *[Insert Accuracy Percentage]*
-    - **Suggested Improvements:** *[Insert Feedback Suggestions]*
-    """)
+        # Completion message after feedback generation
+        st.success("Your video has been processed successfully! Feedback has been generated.")
 
-    # Provide download button only after processing
-    if output_video_path:
-        st.markdown("### Download Processed Video with Feedback")
-        st.download_button(
-            label="Download Processed Video",
-            data=open(output_video_path, "rb"),
-            file_name="processed_feedback_video.mp4",
-            mime="video/mp4"
-        )
+ 
+
+# Download Section
+if st.session_state["output_video_path"]:
+    st.markdown("### Download Processed Video with Feedback")
+    with open(st.session_state["output_video_path"], "rb") as file:
+        video_data = file.read()
+    st.download_button(
+        label="Download Processed Video",
+        data=video_data,
+        file_name="processed_feedback_video.mp4",
+        mime="video/mp4"
+    )
 
 # Footer Section
 st.markdown("---")
@@ -104,4 +105,5 @@ st.write("""
 This app uses machine learning to analyze yoga poses and provide real-time feedback to improve your form. 
 Upload a video, and the model will evaluate your pose, providing feedback on your posture and offering suggestions for improvement.
 """)
-st.write("For more information or questions, feel free to reach out through our [GitHub](https://github.com) or [contact form](#).")
+st.write("For more information or questions, feel free to reach out through our [GitHub](https://github.com).")
+
