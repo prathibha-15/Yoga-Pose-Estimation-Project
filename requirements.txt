@@ -5,6 +5,3 @@ joblib
 mediapipe
 scikit-learn
 pandas
-time
-csv
-os
