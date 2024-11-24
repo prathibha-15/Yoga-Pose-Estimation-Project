@@ -6,7 +6,7 @@ from demo import correct_feedback
 import mediapipe as mp
 
 # Load the trained model
-model = load(r"C:\Users\prath\Desktop\YOGA PROJECT\model.joblib")
+model = load("model.joblib")
 
 # Initialize Mediapipe pose model and drawing utils
 mp_pose = mp.solutions.pose
