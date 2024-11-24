@@ -74,7 +74,7 @@ if uploaded_file is not None:
 
         # Generate feedback only once
         with st.spinner("Processing feedback..."):
-            input_csv = r"C:\Users\prath\Desktop\YOGA PROJECT\teacher_yoga\angle_teacher_yoga.csv"
+            input_csv = r"teacher_yoga/angle_teacher_yoga.csv"
             output_video_path = "processed_video" + os.path.splitext(uploaded_file.name)[1]
             correct_feedback(model, video=temp_video_path, input_csv=input_csv, output_video=output_video_path)
 
