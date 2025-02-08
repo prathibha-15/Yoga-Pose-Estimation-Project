@@ -234,25 +234,24 @@ def correct_feedback(model, video='temp_video.mp4', input_csv='angles_reference.
             
             
             posture = "CORRECT" if correct_angle_count > 9 else "WRONG"
-            posture_color = (0, 255, 0) if posture == "CORRECT" else (0, 0, 255)  # Màu xanh cho đúng, màu đỏ cho sai
+            posture_color = (0, 255, 0) if posture == "CORRECT" else (0, 0, 255) 
 
-            # Thiết lập văn bản và màu cho tư thế
-            posture_position = (10, 30)  # Điều chỉnh giá trị này để đặt văn bản
+            posture_position = (10, 30)  
             cv2.putText(image, f"Yoga movements: {posture}", posture_position, cv2.FONT_HERSHEY_PLAIN, 1.5, posture_color, 2)
 
-            # Thiết lập màu văn bản và định dạng cho FPS
-            fps_text = f"FPS: {1.0 / (time.time() - fps_time):.3f}"  # Hiển thị FPS với 3 chữ số sau dấu thập phân
-            fps_position = (10, 60)  # Điều chỉnh giá trị này để đặt văn bản
+           
+            fps_text = f"FPS: {1.0 / (time.time() - fps_time):.3f}"  
+            fps_position = (10, 60) 
             cv2.putText(image, fps_text, fps_position, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-            # # Xác định chiều dài nhỏ nhất của hai ảnh
+            
             # min_height = min(ins_resize.shape[0], resize_rgb.shape[0])
 
-            # # Thay đổi kích thước ảnh để chiều dài bằng nhau
+           
             # image_resized = cv2.resize(image, (int(min_height / image.shape[0] * image.shape[1]), min_height))
             # instruction_image_resized = cv2.resize(image_ins, (int(min_height / image_ins.shape[0] * image_ins.shape[1]), min_height))
 
-            # # Ghép nối ảnh theo chiều ngang (50/50)
+          
             # result = np.concatenate((image_resized, instruction_image_resized), axis=1)
 
 
